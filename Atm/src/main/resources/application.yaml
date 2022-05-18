@@ -1,36 +1,61 @@
 server:
-  port:8080
   error:
-    include-exception:on
-    include-stacktrace:never
+    include-exception: on
+    include-stacktrace: never
+  port: 8080
+#    include-exception:on
+#    include-stacktrace:never
 spring:
   main:
-  banner-mode:off
-application:
-  name:atm-backend
-datasource:
-  url:jdbc:mysql://localhost:3306/atmdb?createDatabaseIfNotExist=true&autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false
-  username:root
-  password:admin
-  platform:mysql
-  initialization-mode:always
-  data:classpath:db/*.sql
-jpa:
-  show-sql:on
-  generate-ddl:on
-hibernate:
-  ddl-auto:create-drop
-properties.hibernate:
-  format_sql:true
-  use_sql_comments:true
+    banner-mode: off
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:atmdb
+    username: sa
+    password: password
+    driver-class-name: org.h2.Driver
+  sql:
+    init:
+      data-locations: classpath:*.sql
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create-drop
+  application:
+    name: atm-backend
+#application:
+#  name:atm-backend
+#datasource:
+#  url:jdbc:mysql://localhost:3306/atmdb?createDatabaseIfNotExist=true&autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false
+#  username:root
+#  password:admin
+#  platform:mysql
+#  initialization-mode:always
+#  data:classpath:db/*.sql
+#jpa:
+#  show-sql:on
+#  generate-ddl:on
+#hibernate:
+#  ddl-auto:create-drop
+#properties.hibernate:
+#  format_sql:true
+#  use_sql_comments:true
 springdoc:
-  override-with-generic-response:false
-  default-produces-media-type:application/json
-  pathsToMatch:/atm/balance/**
-api-docs:
-  path:/api-docs
-logging:
-level:
-  root:off
-  sql:trace
-  org.springframework.jdbc.datasource:trace
+  override-with-generic-response: false
+  default-produces-media-type: application/json
+  paths-to-match: /atm/**
+  api-docs:
+    path: /api-docs
+#  override-with-generic-response:false
+#  default-produces-media-type:application/json
+#  pathsToMatch:/atm/balance/**
+#api-docs:
+#  path:/api-docs
+#logging:
+#level:
+#  root:off
+#  sql:trace
+#  org.springframework.jdbc.datasource:trace
