@@ -20,6 +20,9 @@
 		<openapi.version>1.5.9</openapi.version>
 		<lombok-plugin.version>1.18.16.0</lombok-plugin.version>
 		<openapi-plugin.version>1.1</openapi-plugin.version>
+
+		<jupiter.version>5.8.2</jupiter.version>
+		<junit.version>4.13.2</junit.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -51,6 +54,19 @@
 			<artifactId>springdoc-openapi-ui</artifactId>
 			<version>${openapi.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>${jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-suite-engine</artifactId>
+			<version>1.8.2</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -70,6 +86,19 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+				<configuration>
+					<argLine>--illegal-access=permit</argLine>
+					<includes>
+						<!--suppress UnresolvedMavenProperty -->
+						<include>${runSuite}</include>
+					</includes>
+					<forkCount>0</forkCount>
 				</configuration>
 			</plugin>
 			<plugin>

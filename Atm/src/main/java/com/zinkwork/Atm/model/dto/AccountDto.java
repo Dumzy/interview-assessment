@@ -9,6 +9,9 @@ public class AccountDto {
     private int maxWithdrawalAmount;
     private String message = null;
 
+    public AccountDto() {
+    }
+
     public AccountDto(int balanceAmount, int maxWithdrawalAmount) {
         this.balanceAmount = balanceAmount;
         this.maxWithdrawalAmount = maxWithdrawalAmount;

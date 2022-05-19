@@ -1,3 +1,16 @@
+DROP TABLE IF EXISTS Atm_Admin;
+CREATE TABLE Atm_Admin (
+    id INT(8) AUTO_INCREMENT PRIMARY KEY,
+    amount VARCHAR(50) NOT NULL,
+    fifty_notes INT(8) NOT NULL,
+    twenty_notes INT(8) NOT NULL,
+    ten_notes INT(8) NOT NULL,
+    five_notes INT(8) NOT NULL
+);
+
+INSERT INTO Atm_Admin (amount,fifty_notes,twenty_notes,ten_notes,five_notes)
+VALUES (0,0,0,0,0);
+
 DROP TABLE IF EXISTS Account;
 CREATE TABLE Account (
     accountnumber VARCHAR(50)  PRIMARY KEY,

@@ -1,8 +1,7 @@
 package com.zinkwork.Atm.controller;
 
-import com.zinkwork.Atm.model.dto.AccountDto;
-import com.zinkwork.Atm.model.dto.UserDto;
-import com.zinkwork.Atm.service.AtmService;
+import com.zinkwork.Atm.model.AtmAdmin;
+import com.zinkwork.Atm.service.AtmAdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,44 +18,45 @@ import javax.validation.Valid;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@Tag(name="atm-rest-controller")
+@Tag(name="atm-admin-controller")
 @RestController
-@RequestMapping("/atm")
+@RequestMapping("/atm/admin")
 @Validated
 @RequiredArgsConstructor
-public class AtmController {
+public class AtmAdminController {
 
     @Autowired
-    private AtmService atmservice;
+    private AtmAdminService atmAdminService;
 
-    Logger logger = LoggerFactory.getLogger(AtmController.class);
+    Logger logger = LoggerFactory.getLogger(AtmAdminController.class);
 
-    @Operation(tags="atm-rest-controller",summary = "getBalance",description = "rest call to return the balance")
+    @Operation(tags="atm-admin-controller",summary = "getATMNotes",description = "rest call to return the bank notes")
     @ApiResponses(value = @ApiResponse(
             responseCode = "200",
             description = "successful operation",
             content = @Content(mediaType = APPLICATION_JSON_VALUE)))
 
-    @PostMapping(path = "/balance",produces = APPLICATION_JSON_VALUE)
-    public AccountDto getAccount(@RequestBody @Valid UserDto userDto) {
+    @GetMapping(path = "/getNotes",produces = APPLICATION_JSON_VALUE)
+    public AtmAdmin getInitializedNotes() {
 
-        logger.info("Get User Account Details");
+        logger.info("Retrieve Current Bank Balance with Number of Notes");
 
-        return atmservice.getAccountDetails(userDto);
+        return atmAdminService.getInitializedNotes();
+
     }
 
-    @Operation(tags="atm-rest-controller",summary = "cashWithdrawal",description = "rest call to withdraw the cash")
+    @Operation(tags="atm-admin-controller",summary = "setATMNotes",description = "rest call to set bank notes")
     @ApiResponses(value = @ApiResponse(
             responseCode = "200",
             description = "successful operation",
             content = @Content(mediaType = APPLICATION_JSON_VALUE)))
 
-    @PostMapping(path = "/withdraw",produces = APPLICATION_JSON_VALUE)
-    public AccountDto cashWithdrawal(@RequestBody @Valid UserDto userDto) {
+    @PostMapping(path = "/setNotes",produces = APPLICATION_JSON_VALUE)
+    public AtmAdmin setATMAccountDetails(@RequestBody @Valid AtmAdmin atmAdmin) {
 
-        logger.info("Proceed with the Cash Withdrawal");
+        logger.info("Set Bank Balance Amount with Number of Notes");
 
-        return atmservice.cashWithdrawal(userDto);
+        return atmAdminService.initializeNotes(atmAdmin);
+
     }
-
 }
