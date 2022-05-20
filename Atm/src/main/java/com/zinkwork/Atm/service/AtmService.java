@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -49,6 +50,7 @@ public class AtmService {
         }
     }
 
+    @Transactional( rollbackFor = Exception.class)
     public synchronized AccountDto cashWithdrawal(UserDto userDto) {
 
         logger.info("Inside cashWithdrawal method");
