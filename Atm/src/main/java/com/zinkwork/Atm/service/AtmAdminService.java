@@ -1,5 +1,7 @@
 package com.zinkwork.Atm.service;
 
+import com.zinkwork.Atm.constant.AtmValidationMessages;
+import com.zinkwork.Atm.exception.BadRequestException;
 import com.zinkwork.Atm.exception.InternalErrorException;
 import com.zinkwork.Atm.exception.NotFoundException;
 import com.zinkwork.Atm.model.AtmAdmin;
@@ -26,6 +28,8 @@ public class AtmAdminService {
         logger.info("Add Bank Balance with Number of Notes");
 
         CommonValidator.validateATMAccount(atmAdmin);
+
+        checkAmount(atmAdmin);
 
         AtmAdmin atmAdminCurrent = getTopRecord();
 
@@ -70,6 +74,14 @@ public class AtmAdminService {
 
     public AtmAdmin getInitializedNotes() {
         return getTopRecord();
+    }
+
+    private void checkAmount(AtmAdmin atmAdmin) {
+
+        if (atmAdmin.getAmount() != (atmAdmin.getFiftyNotes()*50 + atmAdmin.getTwentyNotes()*20
+                + atmAdmin.getTenNotes()*10 + atmAdmin.getFiveNotes()*5)) {
+            throw new BadRequestException(AtmValidationMessages.INVALID_ATM_AMOUNT_WITH_NOTES);
+        }
     }
 
     private AtmAdmin getTopRecord() {

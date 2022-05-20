@@ -24,8 +24,10 @@ public class AccountBalanceValidation {
 
         logger.info("Inside checkAccountBalance Method");
 
+        // Get the maximum amount that the user can withdraw
         int totalBalance = accBalance + overdraft;
 
+        // Check whether the withdrawal amount is less than the ATM balance
         if (withdrawalAmount > atmCurrentNotes.getAmount()) {
             throw new BadRequestException(AtmValidationMessages.NO_ENOUGH_BANK_BALANCE);
 
@@ -87,6 +89,7 @@ public class AccountBalanceValidation {
 
                 if (notes[i] == 50) {
 
+                    // Check if that the 50 notes in the ATM are sufficient
                     if (noteCounter[i] <= currentNotes.getFiftyNotes()) {
                         atmAdmin.setFiftyNotes(noteCounter[i]);
                         cashValue = cashValue - noteCounter[i] * notes[i];
@@ -96,29 +99,32 @@ public class AccountBalanceValidation {
                     }
                 } else if (notes[i] == 20) {
 
+                    // Check if that the 20 notes in the ATM are sufficient
                     if (noteCounter[i] <= currentNotes.getTwentyNotes()) {
                         atmAdmin.setTwentyNotes(noteCounter[i]);
                         cashValue = cashValue - noteCounter[i] * notes[i];
                     } else {
-                        atmAdmin.setFiftyNotes(currentNotes.getTwentyNotes());
+                        atmAdmin.setTwentyNotes(currentNotes.getTwentyNotes());
                         cashValue = cashValue - currentNotes.getTwentyNotes() * notes[i];
                     }
                 } else if (notes[i] == 10) {
 
+                    // Check if that the 10 notes in the ATM are sufficient
                     if (noteCounter[i] <= currentNotes.getTenNotes()) {
                         atmAdmin.setTenNotes(noteCounter[i]);
                         cashValue = cashValue - noteCounter[i] * notes[i];
                     } else {
-                        atmAdmin.setFiftyNotes(currentNotes.getTenNotes());
+                        atmAdmin.setTenNotes(currentNotes.getTenNotes());
                         cashValue = cashValue - currentNotes.getTenNotes() * notes[i];
                     }
                 } else if (notes[i] == 5) {
 
+                    // Check if that the 5 notes in the ATM are sufficient
                     if (noteCounter[i] <= currentNotes.getFiveNotes()) {
                         atmAdmin.setFiveNotes(noteCounter[i]);
                         cashValue = cashValue - noteCounter[i] * notes[i];
                     } else {
-                        atmAdmin.setFiftyNotes(currentNotes.getFiftyNotes());
+                        atmAdmin.setFiveNotes(currentNotes.getFiveNotes());
                         cashValue = cashValue - currentNotes.getFiveNotes() * notes[i];
                     }
                 }

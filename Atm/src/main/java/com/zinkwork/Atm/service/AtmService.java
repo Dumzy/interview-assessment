@@ -1,5 +1,6 @@
 package com.zinkwork.Atm.service;
 
+import com.zinkwork.Atm.exception.BadRequestException;
 import com.zinkwork.Atm.exception.InternalErrorException;
 import com.zinkwork.Atm.exception.NotFoundException;
 import com.zinkwork.Atm.model.Account;
@@ -69,6 +70,8 @@ public class AtmService {
 
         } catch (NotFoundException e) {
             throw new NotFoundException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (BadRequestException e) {
+            throw new BadRequestException(e.getMessage());
         } catch (Exception e) {
             throw new InternalErrorException();
         }

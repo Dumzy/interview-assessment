@@ -62,7 +62,7 @@ public class AtmAdminServiceTest {
     @Test
     public void testUpdateNotes() {
 
-        AtmAdmin atmCurrent = atmAdmin;
+        AtmAdmin atmCurrent = atmAdmin.clone();
         atmCurrent.setFiftyNotes(50);
         atmCurrent.setTwentyNotes(50);
         atmCurrent.setTenNotes(50);
@@ -78,7 +78,7 @@ public class AtmAdminServiceTest {
     public void testUpdateNotesException() {
 
         Assertions.assertThrows(InternalErrorException.class, () -> {
-            AtmAdmin atmCurrent = atmAdmin;
+            AtmAdmin atmCurrent = atmAdmin.clone();
             atmCurrent.setFiftyNotes(50);
             atmCurrent.setTwentyNotes(50);
             atmCurrent.setTenNotes(50);

@@ -9,7 +9,8 @@ public final class AtmValidationMessages {
     public static final String NO_ENOUGH_BALANCE = "You don't have enough account balance to withdraw money";
     public static final String NO_ENOUGH_BANK_BALANCE = "Bank doesn't have enough money to withdraw this Amount";
     public static final String NO_ENOUGH_BANK_NOTES = "Bank doesn't have enough notes to withdraw this Amount";
-    public static final String INVALID_WITHDRAWAL_VALUE = "Withdrawal Amount Should be in Valid Currency Notes";
+    public static final String INVALID_WITHDRAWAL_VALUE = "Withdrawal amount must be made in valid currency notes";
+    public static final String INVALID_ATM_AMOUNT_WITH_NOTES = "ATM amount doesn't tally with the number of notes";
 
     public static final String INVALID_ATM_AMOUNT = "Invalid Amount";
     public static final String INVALID_FIFTY_NOTES = "Invalid Number of Fifty Notes";

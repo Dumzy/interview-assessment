@@ -16,7 +16,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AtmAdmin {
+public class AtmAdmin implements Cloneable {
 
     @JsonIgnore
     @Id
@@ -28,4 +28,14 @@ public class AtmAdmin {
     private Integer tenNotes = 0;
     private Integer fiveNotes = 0;
 
+    @Override
+    public AtmAdmin clone() {
+        try {
+            AtmAdmin clone = (AtmAdmin) super.clone();
+            // TODO: copy mutable state here, so the clone can't change the internals of the original
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
 }
