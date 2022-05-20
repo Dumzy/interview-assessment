@@ -9,7 +9,7 @@ CREATE TABLE Atm_Admin (
 );
 
 INSERT INTO Atm_Admin (amount,fifty_notes,twenty_notes,ten_notes,five_notes)
-VALUES (0,0,0,0,0);
+VALUES (1500,10,30,30,20);
 
 DROP TABLE IF EXISTS Account;
 CREATE TABLE Account (

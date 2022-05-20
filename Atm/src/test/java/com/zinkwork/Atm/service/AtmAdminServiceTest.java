@@ -1,6 +1,8 @@
 package com.zinkwork.Atm.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zinkwork.Atm.exception.InternalErrorException;
+import com.zinkwork.Atm.exception.NotFoundException;
 import com.zinkwork.Atm.model.AtmAdmin;
 import com.zinkwork.Atm.model.repository.AtmAdminRepository;
 import org.junit.jupiter.api.Assertions;
@@ -12,8 +14,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,9 +52,9 @@ public class AtmAdminServiceTest {
     @Test
     public void testInitializeNotesException() {
 
-        Assertions.assertThrows(Exception.class, () -> {
+        Assertions.assertThrows(InternalErrorException.class, () -> {
             Mockito.when(atmAdminRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(atmAdmin));
-            Mockito.when(atmAdminRepository.save(Mockito.any())).thenThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
+            Mockito.when(atmAdminRepository.save(Mockito.any())).thenThrow(new InternalErrorException());
             atmAdminService.initializeNotes(atmAdmin);
         });
     }
@@ -77,14 +77,14 @@ public class AtmAdminServiceTest {
     @Test
     public void testUpdateNotesException() {
 
-        Assertions.assertThrows(Exception.class, () -> {
+        Assertions.assertThrows(InternalErrorException.class, () -> {
             AtmAdmin atmCurrent = atmAdmin;
             atmCurrent.setFiftyNotes(50);
             atmCurrent.setTwentyNotes(50);
             atmCurrent.setTenNotes(50);
 
             Mockito.lenient().when(atmAdminRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(atmAdmin));
-            Mockito.when(atmAdminRepository.save(Mockito.any())).thenThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
+            Mockito.when(atmAdminRepository.save(Mockito.any())).thenThrow(new InternalErrorException());
             atmAdminService.updateNotes(atmAdmin, atmCurrent);
         });
     }
@@ -100,10 +100,10 @@ public class AtmAdminServiceTest {
     }
 
     @Test
-    public void testGetInitializeNotesException() {
+    public void testGetInitializeNotesNotFoundException() {
 
-        Assertions.assertThrows(Exception.class, () -> {
-            Mockito.when(atmAdminRepository.findById(Mockito.anyInt())).thenReturn(null);
+        Assertions.assertThrows(NotFoundException.class, () -> {
+            Mockito.when(atmAdminRepository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
             atmAdminService.getInitializedNotes();
         });
     }

@@ -1,14 +1,14 @@
 package com.zinkwork.Atm.service;
 
-import com.zinkwork.Atm.constant.AtmValidationMessages;
+import com.zinkwork.Atm.exception.InternalErrorException;
+import com.zinkwork.Atm.exception.NotFoundException;
 import com.zinkwork.Atm.model.AtmAdmin;
 import com.zinkwork.Atm.model.repository.AtmAdminRepository;
+import com.zinkwork.Atm.validation.CommonValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -20,34 +20,37 @@ public class AtmAdminService {
 
     Logger logger = LoggerFactory.getLogger(AtmAdminService.class);
 
+
     public AtmAdmin initializeNotes(AtmAdmin atmAdmin) {
 
+        logger.info("Add Bank Balance with Number of Notes");
+
+        CommonValidator.validateATMAccount(atmAdmin);
+
+        AtmAdmin atmAdminCurrent = getTopRecord();
+
+        atmAdminCurrent.setAmount(atmAdmin.getAmount() + atmAdminCurrent.getAmount());
+        atmAdminCurrent.setFiftyNotes(atmAdmin.getFiftyNotes() + atmAdminCurrent.getFiftyNotes());
+        atmAdminCurrent.setTwentyNotes(atmAdmin.getTwentyNotes() + atmAdminCurrent.getTwentyNotes());
+        atmAdminCurrent.setTenNotes(atmAdmin.getTenNotes() + atmAdminCurrent.getTenNotes());
+        atmAdminCurrent.setFiveNotes(atmAdmin.getFiveNotes() + atmAdminCurrent.getFiveNotes());
+
         try {
-
-            logger.info("Add Bank Balance with Number of Notes");
-
-            AtmAdmin atmAdminCurrent = getTopRecord();
-
-            atmAdminCurrent.setAmount(atmAdmin.getAmount() + atmAdminCurrent.getAmount());
-            atmAdminCurrent.setFiftyNotes(atmAdmin.getFiftyNotes() + atmAdminCurrent.getFiftyNotes());
-            atmAdminCurrent.setTwentyNotes(atmAdmin.getTwentyNotes() + atmAdminCurrent.getTwentyNotes());
-            atmAdminCurrent.setTenNotes(atmAdmin.getTenNotes() + atmAdminCurrent.getTenNotes());
-            atmAdminCurrent.setFiveNotes(atmAdmin.getFiveNotes() + atmAdminCurrent.getFiveNotes());
 
             atmAdminRepository.save(atmAdminCurrent);
 
             return atmAdmin;
 
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw new InternalErrorException();
         }
     }
 
     public void updateNotes(AtmAdmin atmUpdatedNotes, AtmAdmin currentNotes) {
 
+        logger.info("Update Existing Bank Balance with Number of Notes");
+
         try {
-            logger.info("Update Existing Bank Balance with Number of Notes");
 
             AtmAdmin atmLatest = new AtmAdmin();
 
@@ -61,8 +64,7 @@ public class AtmAdminService {
             atmAdminRepository.save(atmLatest);
 
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw new InternalErrorException();
         }
     }
 
@@ -74,10 +76,10 @@ public class AtmAdminService {
 
         Optional<AtmAdmin> atmAdmin = atmAdminRepository.findById(1);
 
-        if (atmAdmin.isPresent()) {
-            return atmAdmin.get();
+        if (!atmAdmin.isPresent()) {
+            throw new NotFoundException();
         }
 
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, AtmValidationMessages.INVALID_WITHDRAWAL_VALUE);
+        return atmAdmin.get();
     }
 }

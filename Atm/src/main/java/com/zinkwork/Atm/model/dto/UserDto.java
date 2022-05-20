@@ -4,7 +4,7 @@ public class UserDto {
 
     private String accountNumber;
     private String pin;
-    private int withdrawalAmount;
+    private Integer withdrawalAmount;
 
     public String getAccountNumber() {
         return accountNumber;
@@ -22,11 +22,11 @@ public class UserDto {
         this.pin = pin;
     }
 
-    public int getWithdrawalAmount() {
+    public Integer getWithdrawalAmount() {
         return withdrawalAmount;
     }
 
-    public void setWithdrawalAmount(int withdrawalAmount) {
+    public void setWithdrawalAmount(Integer withdrawalAmount) {
         this.withdrawalAmount = withdrawalAmount;
     }
 }

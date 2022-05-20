@@ -10,8 +10,8 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI apiInfo() {
         return new OpenAPI().info(
-                new Info().title("Spring Rest API Bootstrap")
-                        .description("Bootstrap to Restful API with Spring Boot.")
-                        .version("0.0.1"));
+                new Info().title("ATM Rest API Application")
+                        .description("API's for ATM machine.")
+                        .version("1.0.0"));
     }
 }

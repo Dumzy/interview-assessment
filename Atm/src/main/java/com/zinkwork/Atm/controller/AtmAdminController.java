@@ -57,6 +57,5 @@ public class AtmAdminController {
         logger.info("Set Bank Balance Amount with Number of Notes");
 
         return atmAdminService.initializeNotes(atmAdmin);
-
     }
 }

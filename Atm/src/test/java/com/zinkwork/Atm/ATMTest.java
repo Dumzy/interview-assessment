@@ -10,7 +10,7 @@ import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 
 @Suite
-@SelectClasses({ AtmAdminControllerTest.class, AtmControllerTest.class, AtmAdminControllerTest.class,
+@SelectClasses({ AtmAdminControllerTest.class, AtmControllerTest.class,
         AtmAdminServiceTest.class, AtmAdminServiceTest.class, AccountBalanceValidationTest.class })
 class ATMTest {
 

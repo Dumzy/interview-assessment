@@ -1,6 +1,7 @@
 package com.zinkwork.Atm.util;
 
 import com.zinkwork.Atm.constant.AtmValidationMessages;
+import com.zinkwork.Atm.exception.BadRequestException;
 import com.zinkwork.Atm.model.AtmAdmin;
 import com.zinkwork.Atm.model.dto.AccountDto;
 import com.zinkwork.Atm.service.AtmAdminService;
@@ -26,12 +27,10 @@ public class AccountBalanceValidation {
         int totalBalance = accBalance + overdraft;
 
         if (withdrawalAmount > atmCurrentNotes.getAmount()) {
-            logger.error(AtmValidationMessages.NO_ENOUGH_BANK_BALANCE);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, AtmValidationMessages.NO_ENOUGH_BANK_BALANCE);
+            throw new BadRequestException(AtmValidationMessages.NO_ENOUGH_BANK_BALANCE);
 
         } else if (withdrawalAmount > totalBalance) {
-            logger.error(AtmValidationMessages.NO_ENOUGH_BALANCE);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, AtmValidationMessages.NO_ENOUGH_BALANCE);
+            throw new BadRequestException(AtmValidationMessages.NO_ENOUGH_BALANCE);
 
         } else {
 
@@ -41,31 +40,12 @@ public class AccountBalanceValidation {
                 AtmAdmin notesNeeded = checkNumberOfNotesNeeded(withdrawalAmount, atmCurrentNotes);
                 return new AccountDto(balance, balance + overdraft, setMessage(notesNeeded));
 
-//                AtmAdmin atmNotesNeeded = splitBalanceintoNotes(withdrawalAmount, atmCurrentNotes);
-//
-//                if (atmNotesNeeded == null) {
-//                    logger.error(AtmValidationMessages.NO_ENOUGH_BANK_NOTES);
-//                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, AtmValidationMessages.NO_ENOUGH_BANK_NOTES);
-//                }
-//
-//                atmAdminService.updateNotes(atmNotesNeeded, atmCurrentNotes);
-//                return new AccountDto(balance, balance + overdraft, setMessage(atmNotesNeeded));
-
             } else {
 
                 int balance = totalBalance - withdrawalAmount;
                 AtmAdmin notesNeeded = checkNumberOfNotesNeeded(withdrawalAmount, atmCurrentNotes);
                 return new AccountDto(0, balance, setMessage(notesNeeded));
 
-//                AtmAdmin atmNotesNeeded = splitBalanceintoNotes(withdrawalAmount, atmCurrentNotes);
-//
-//                if (atmNotesNeeded == null) {
-//                    logger.error(AtmValidationMessages.NO_ENOUGH_BANK_NOTES);
-//                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, AtmValidationMessages.NO_ENOUGH_BANK_NOTES);
-//                }
-//
-//                atmAdminService.updateNotes(atmNotesNeeded, atmCurrentNotes);
-//                return new AccountDto(0, balance, setMessage(atmNotesNeeded));
             }
         }
     }
@@ -77,8 +57,7 @@ public class AccountBalanceValidation {
         AtmAdmin atmNotesNeeded = splitBalanceintoNotes(withAmount, currentATMNotes);
 
         if (atmNotesNeeded == null) {
-            logger.error(AtmValidationMessages.NO_ENOUGH_BANK_NOTES);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, AtmValidationMessages.NO_ENOUGH_BANK_NOTES);
+            throw new BadRequestException(AtmValidationMessages.NO_ENOUGH_BANK_NOTES);
         }
 
         atmAdminService.updateNotes(atmNotesNeeded, currentATMNotes);
@@ -95,8 +74,7 @@ public class AccountBalanceValidation {
         int cashValue = cashAmount;
 
         if (cashValue % 5 != 0) {
-            logger.error(AtmValidationMessages.INVALID_WITHDRAWAL_VALUE);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, AtmValidationMessages.INVALID_WITHDRAWAL_VALUE);
+            throw new BadRequestException(AtmValidationMessages.INVALID_WITHDRAWAL_VALUE);
         }
 
         AtmAdmin atmAdmin = new AtmAdmin();

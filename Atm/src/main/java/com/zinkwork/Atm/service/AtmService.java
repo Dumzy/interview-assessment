@@ -1,6 +1,7 @@
 package com.zinkwork.Atm.service;
 
-import com.zinkwork.Atm.constant.AtmValidationMessages;
+import com.zinkwork.Atm.exception.InternalErrorException;
+import com.zinkwork.Atm.exception.NotFoundException;
 import com.zinkwork.Atm.model.Account;
 import com.zinkwork.Atm.model.dto.AccountDto;
 import com.zinkwork.Atm.model.dto.UserDto;
@@ -12,13 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.server.ResponseStatusException;
-import org.webjars.NotFoundException;
 
 import java.util.Optional;
-
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class AtmService {
@@ -38,18 +34,17 @@ public class AtmService {
 
         logger.info("Inside getAccountDetails method");
 
+        CommonValidator.validateUser(userDto);
+
         try {
 
-            CommonValidator.validateUser(userDto);
             Account account = getByAccountNumAndPin(userDto.getAccountNumber(), userDto.getPin());
             return new AccountDto(account.getBalance(), account.getBalance() + account.getOverdraft());
 
         } catch (NotFoundException e) {
-            logger.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+            throw new NotFoundException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw new InternalErrorException();
         }
     }
 
@@ -57,9 +52,10 @@ public class AtmService {
 
         logger.info("Inside cashWithdrawal method");
 
+        CommonValidator.validateUserCashWithdrawal(userDto);
+
         try {
 
-            CommonValidator.validateUser(userDto);
             Account account = getByAccountNumAndPin(userDto.getAccountNumber(), userDto.getPin());
             AccountDto accountDto = accountBalanceValidation.checkAccountBalance(userDto.getWithdrawalAmount(),
                     account.getBalance(), account.getOverdraft(), atmAdminService.getInitializedNotes());
@@ -72,11 +68,9 @@ public class AtmService {
             return accountDto;
 
         } catch (NotFoundException e) {
-            logger.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+            throw new NotFoundException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw new InternalErrorException();
         }
 
     }
@@ -86,7 +80,7 @@ public class AtmService {
         Optional<Account> account = accountRepository.findByAccountnumberAndPin(accNo, pinNo);
 
         if (!account.isPresent()) {
-            throw new ResponseStatusException(NOT_FOUND, AtmValidationMessages.INVALID_ACCOUNT);
+            throw new NotFoundException();
         }
 
         return account.get();

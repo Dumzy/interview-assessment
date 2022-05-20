@@ -1,6 +1,7 @@
 package com.zinkwork.Atm.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zinkwork.Atm.exception.BadRequestException;
 import com.zinkwork.Atm.model.AtmAdmin;
 import com.zinkwork.Atm.model.dto.AccountDto;
 import com.zinkwork.Atm.model.repository.AtmAdminRepository;
@@ -71,7 +72,7 @@ public class AccountBalanceValidationTest {
     @Test
     public void testCheckAccountBalanceWhenWithdrawalAmountGreaterThanBank() {
 
-        Assertions.assertThrows(ResponseStatusException.class, () -> {
+        Assertions.assertThrows(BadRequestException.class, () -> {
             Mockito.lenient().when(atmAdminRepository.save(Mockito.any())).thenReturn(atmAdmin);
             AccountDto accountDtos = accountBalanceValidation.checkAccountBalance(2000, 600, 100, atmAdmin);
         });
@@ -80,7 +81,7 @@ public class AccountBalanceValidationTest {
     @Test
     public void testCheckAccountBalanceWhenWithdrawalAmountGreaterThanUserAccount() {
 
-        Assertions.assertThrows(ResponseStatusException.class, () -> {
+        Assertions.assertThrows(BadRequestException.class, () -> {
             Mockito.lenient().when(atmAdminRepository.save(Mockito.any())).thenReturn(atmAdmin);
             AccountDto accountDtos = accountBalanceValidation.checkAccountBalance(1000, 600, 100, atmAdmin);
         });

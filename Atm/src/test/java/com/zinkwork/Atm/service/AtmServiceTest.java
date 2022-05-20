@@ -1,6 +1,7 @@
 package com.zinkwork.Atm.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zinkwork.Atm.exception.NotFoundException;
 import com.zinkwork.Atm.model.Account;
 import com.zinkwork.Atm.model.AtmAdmin;
 import com.zinkwork.Atm.model.dto.AccountDto;
@@ -68,26 +69,84 @@ public class AtmServiceTest {
     @Test
     public void testGetAccountDetails() {
 
-        Mockito.when(accountRepository.findByAccountnumberAndPin(Mockito.anyString(), Mockito.anyString())).thenReturn(Optional.of(account));
+        Mockito.when(accountRepository.findByAccountnumberAndPin(Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(Optional.of(account));
 
         AccountDto accountDtos = atmService.getAccountDetails(userDto);
         Assertions.assertNotNull(accountDtos);
 
-        Mockito.verify(accountRepository, Mockito.times(1)).findByAccountnumberAndPin(Mockito.anyString(), Mockito.anyString());
+        Mockito.verify(accountRepository, Mockito.times(1)).findByAccountnumberAndPin(Mockito.anyString(),
+                Mockito.anyString());
+    }
+
+    @Test
+    public void testGetAccountDetailsNotFoundException() {
+
+        Assertions.assertThrows(NotFoundException.class, () -> {
+
+            Mockito.when(accountRepository.findByAccountnumberAndPin(Mockito.anyString(), Mockito.anyString()))
+                    .thenThrow(new NotFoundException());
+
+            atmService.getAccountDetails(userDto);
+        });
+
+    }
+
+    @Test
+    public void testGetAccountDetailsException() {
+
+        Assertions.assertThrows(Exception.class, () -> {
+
+            Mockito.when(accountRepository.findByAccountnumberAndPin(Mockito.anyString(), Mockito.anyString()))
+                    .thenThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
+
+            atmService.getAccountDetails(userDto);
+        });
+
     }
 
     @Test
     public void testCashWithdrawal() {
 
-        Mockito.when(accountRepository.findByAccountnumberAndPin(Mockito.anyString(), Mockito.anyString())).thenReturn(Optional.of(account));
+        Mockito.when(accountRepository.findByAccountnumberAndPin(Mockito.anyString(), Mockito.anyString())).
+                thenReturn(Optional.of(account));
         Mockito.lenient().when(accountRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(account));
-        Mockito.when(accountBalanceValidation.checkAccountBalance(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.any())).thenReturn(accountDto);
+        Mockito.when(accountBalanceValidation.checkAccountBalance(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(),
+                Mockito.any())).thenReturn(accountDto);
 
         AccountDto accountDtos = atmService.cashWithdrawal(userDto);
         Assertions.assertNotNull(accountDtos);
 
-        Mockito.verify(accountRepository, Mockito.times(1)).findByAccountnumberAndPin(Mockito.anyString(), Mockito.anyString());
-        Mockito.verify(accountBalanceValidation, Mockito.times(1)).checkAccountBalance(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), Mockito.any());
+        Mockito.verify(accountRepository, Mockito.times(1)).findByAccountnumberAndPin(Mockito.anyString(),
+                Mockito.anyString());
+        Mockito.verify(accountBalanceValidation, Mockito.times(1)).checkAccountBalance(Mockito.anyInt(),
+                Mockito.anyInt(), Mockito.anyInt(), Mockito.any());
+    }
+
+    @Test
+    public void testCashWithdrawalNotFoundException() {
+
+        Assertions.assertThrows(NotFoundException.class, () -> {
+
+            Mockito.when(accountRepository.findByAccountnumberAndPin(Mockito.anyString(), Mockito.anyString()))
+                    .thenThrow(new NotFoundException());
+            atmService.cashWithdrawal(userDto);
+        });
+    }
+
+    @Test
+    public void testCashWithdrawalException() {
+
+        Assertions.assertThrows(Exception.class, () -> {
+
+            Mockito.when(accountRepository.findByAccountnumberAndPin(Mockito.anyString(), Mockito.anyString())).
+                    thenReturn(Optional.of(account));
+            Mockito.lenient().when(accountRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(account));
+            Mockito.when(accountBalanceValidation.checkAccountBalance(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(),
+                    Mockito.any())).thenThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
+
+            atmService.cashWithdrawal(userDto);
+        });
     }
 
 }
